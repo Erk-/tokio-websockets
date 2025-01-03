@@ -120,6 +120,25 @@ pub struct Builder<'a, R: Resolver = resolver::Gai> {
     headers: HeaderMap,
 }
 
+impl<'a, R> Builder<'a, R> {
+    /// List of headers added by the client which will cause an error
+    /// if added by the user:
+    ///
+    /// - `host`
+    /// - `upgrade`
+    /// - `connection`
+    /// - `sec-websocket-key`
+    /// - `sec_websocket_version`
+    pub const DISALLOWED_HEADERS: &'static [HeaderName] = &[
+        header::HOST,
+        header::UPGRADE,
+        header::CONNECTION,
+        header::SEC_WEBSOCKET_KEY,
+        header::SEC_WEBSOCKET_VERSION,
+    ];
+
+}
+
 impl Builder<'_> {
     /// Creates a [`Builder`] with all defaults that is not configured to
     /// connect to any server.
@@ -153,22 +172,6 @@ impl Builder<'_> {
 }
 
 impl<'a, R: Resolver> Builder<'a, R> {
-    /// List of headers added by the client which will cause an error
-    /// if added by the user:
-    ///
-    /// - `host`
-    /// - `upgrade`
-    /// - `connection`
-    /// - `sec-websocket-key`
-    /// - `sec_websocket_version`
-    pub const DISALLOWED_HEADERS: &'static [HeaderName] = &[
-        header::HOST,
-        header::UPGRADE,
-        header::CONNECTION,
-        header::SEC_WEBSOCKET_KEY,
-        header::SEC_WEBSOCKET_VERSION,
-    ];
-
     /// Sets the [`Uri`] to connect to. This URI must use the `ws` or `wss`
     /// schemes.
     ///
